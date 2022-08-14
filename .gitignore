@@ -33,6 +33,7 @@ Thumbs.db
 
 # VSCode files
 .vscode/
+.idea/
 
 # Virual environments
 venv/
