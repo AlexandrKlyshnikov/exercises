@@ -1,4 +1,3 @@
-from site import venv
 import sys
 
 def venv_check():
@@ -6,3 +5,4 @@ def venv_check():
 
 if __name__ == "__main__":
     print('Using venv:', venv_check())
+    
