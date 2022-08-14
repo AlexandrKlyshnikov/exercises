@@ -37,3 +37,10 @@ Thumbs.db
 
 # Virual environments
 venv/
+pyneng.egg-info/top_level.txt
+pyneng.egg-info/requires.txt
+pyneng.egg-info/SOURCES.txt
+pyneng.egg-info/PKG-INFO
+pyneng.egg-info/entry_points.txt
+pyneng.egg-info/dependency_links.txt
+build/lib/pyneng.py
