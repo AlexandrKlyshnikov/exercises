@@ -15,16 +15,7 @@
 проверять результат.
 """
 
-from os import sep
-
-
 mac = "AAAA:BBBB:CCCC"
 
-octets = mac.split(':')
-
-result = ''
-
-for o in octets:
-    result += bin(int(o, 16)).replace('0b', '')
-
-print(result)
+bin_mac = "{:b}".format(int(mac.replace(":", ""), 16))
+print(bin_mac)
