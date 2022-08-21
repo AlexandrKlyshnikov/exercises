@@ -19,9 +19,6 @@ $ python task_5_1a.py
 решить без использования условия if.
 """
 
-from sqlite3 import paramstyle
-
-
 london_co = {
     "r1": {
         "location": "21 New Globe Walk",
@@ -48,6 +45,7 @@ london_co = {
     },
 }
 
-device = input("Введите имя устройства:")
-parameter = input("Введите имя параметра:")
+device = input("Введите имя устройства: ")
+parameter = input("Введите имя параметра: ")
+
 print(london_co[device][parameter])

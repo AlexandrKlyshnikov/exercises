@@ -25,6 +25,9 @@ $ python task_5_1b.py
 решить без использования условия if.
 """
 
+from unicodedata import decimal
+
+
 london_co = {
     "r1": {
         "location": "21 New Globe Walk",
@@ -50,3 +53,6 @@ london_co = {
         "routing": True,
     },
 }
+device = input("Введите имя устройства:")
+parameter = input("Введите имя параметра: (" + ', '.join(dict.keys(london_co[device])).strip(", ") + "):")
+print(london_co[device][parameter])

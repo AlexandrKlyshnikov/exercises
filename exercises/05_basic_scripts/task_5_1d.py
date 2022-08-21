@@ -18,6 +18,9 @@ $ python task_5_1d.py
 решить без использования условия if.
 """
 
+from ssl import DefaultVerifyPaths
+
+
 london_co = {
     "r1": {
         "location": "21 New Globe Walk",
@@ -43,3 +46,13 @@ london_co = {
         "routing": True,
     },
 }
+
+
+device = input("Введите имя устройства:")
+device = device.lower()
+parameter = input("Введите имя параметра: (" + ', '.join(dict.keys(london_co[device])).strip(", ") + "):")
+parameter = parameter.lower()
+try:
+    print(london_co[device][parameter])
+except:
+    print("Такого параметра нет")
