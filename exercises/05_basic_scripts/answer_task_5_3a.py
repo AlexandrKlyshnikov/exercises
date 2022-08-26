@@ -26,12 +26,12 @@ trunk_template = [
     "switchport trunk allowed vlan {}",
 ]
 
-querry = {"access": "Введите номер VLAN:", "trunk": "Введите разрешенные VLANы:"}
-temp = {"access": access_template, "trunk": trunk_template}
+template = {"access": access_template, "trunk": trunk_template}
+question = {"access": "Введите номер VLAN: ", "trunk": "Введите разрешенные VLANы: "}
 
-i_mode = input("Введите режим работы интерфейса (access/trunk):")
-i_type = input("Введите тип и номер интерфейса:")
-vlan = input(querry[i_mode])
+mode = input("Введите режим работы интерфейса (access/trunk): ")
+interface = input("Введите тип и номер интерфейса: ")
+vlans = input(question[mode])
 
-print("\ninterface", i_type)
-print('\n'.join(temp[i_mode]).format(vlan))
+print("interface {}".format(interface))
+print("\n".join(template[mode]).format(vlans))

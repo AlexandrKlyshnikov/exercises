@@ -50,9 +50,6 @@ switchport mode trunk
 switchport trunk allowed vlan 2,3,4,5
 """
 
-from configparser import InterpolationMissingOptionError
-
-
 access_template = [
     "switchport mode access",
     "switchport access vlan {}",
@@ -67,10 +64,12 @@ trunk_template = [
     "switchport trunk allowed vlan {}",
 ]
 
-i_mode = input("Введите режим работы интерфейса (access/trunk):")
-i_type = input("Введите тип и номер интерфейса:")
-vlan = input("Введите номер влан(ов):")
-temp = {"access": access_template, "trunk": trunk_template}
 
-print("\ninterface", i_type)
-print('\n'.join(temp[i_mode]).format(vlan))
+template = {"access": access_template, "trunk": trunk_template}
+
+mode = input("Введите режим работы интерфейса (access/trunk): ")
+interface = input("Введите тип и номер интерфейса: ")
+vlans = input("Введите номер влан(ов): ")
+
+print(f"interface {interface}")
+print("\n".join(template[mode]).format(vlans))
