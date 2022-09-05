@@ -17,15 +17,11 @@ Enter VLAN number: 10
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
-result = []
-with open("/home/user/Code/exercises/exercises/07_files/CAM_table.txt", 'r') as file:
-    for line in file:
-        if "Gi" in line:
-            split = line.split()
-            result.append([int(split[0]), split[1], split[3]])
+user_vlan = input("Enter VLAN number: ")
 
-vlan = int(input("Enter VLAN number:"))
-
-for line in sorted(result):
-    if line[0] == vlan:
-        print("{:<9}{:<20}{:<10}".format(line[0], line[1], line[2]))
+with open("CAM_table.txt", "r") as conf:
+    for line in conf:
+        words = line.split()
+        if words and words[0].isdigit() and words[0] == user_vlan:
+            vlan, mac, _, intf = words
+            print(f"{vlan:9}{mac:20}{intf}")

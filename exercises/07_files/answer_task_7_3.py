@@ -21,8 +21,9 @@
 
 """
 
-with open("/home/user/Code/exercises/exercises/07_files/CAM_table.txt", 'r') as file:
-    for line in file:
-        if "Gi" in line:
-            split = line.split()
-            print("{:<9}{:<20}{:<10}".format(split[0], split[1], split[3]))
+with open("CAM_table.txt") as conf:
+    for line in conf:
+        words = line.split()
+        if words and words[0].isdigit():
+            vlan, mac, _, interface = words
+            print(f"{vlan:9}{mac:20}{interface}")

@@ -81,29 +81,20 @@ infiles = [
     "sh_cdp_n_r3.txt",
 ]
 
-abs_path_infiles = [
-    "/home/user/Code/exercises/exercises/11_modules/sh_cdp_n_sw1.txt",
-    "/home/user/Code/exercises/exercises/11_modules/sh_cdp_n_r1.txt",
-    "/home/user/Code/exercises/exercises/11_modules/sh_cdp_n_r2.txt",
-    "/home/user/Code/exercises/exercises/11_modules/sh_cdp_n_r3.txt",
-]
-
-output_file = "/home/user/Code/exercises/exercises/11_modules/output"
-
-from enum import unique
-import task_11_2 as t2
-import draw_network_graph as dng
-
 
 def unique_network_map(topology_dict):
-    unique = {}
+    network_map = {}
     for key, value in topology_dict.items():
-        if not key == unique.get(value):
-            unique[key] = value
-    return unique
+        if not network_map.get(value) == key:
+            network_map[key] = value
+    return network_map
 
 
+# второй вариант решения
+def unique_network_map(topology_dict):
+    network_map = {}
+    for key, value in topology_dict.items():
+        key, value = sorted([key, value])
+        network_map[key] = value
+    return network_map
 
-if __name__ == "__main__":
-    # dng.draw_topology(t2.create_network_map(abs_path_infiles), output_file)
-    dng.draw_topology(unique_network_map(t2.create_network_map(abs_path_infiles)), output_file)

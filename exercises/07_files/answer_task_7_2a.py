@@ -15,17 +15,16 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+from sys import argv
 
 ignore = ["duplex", "alias", "configuration"]
 
-FILENAME = "/home/user/Code/exercises/exercises/07_files/config_sw1.txt"
+filename = argv[1]
 
-with open(FILENAME, 'r') as file:
+with open(filename) as f:
+    for line in f:
+        words = line.split()
+        words_intersect = set(words) & set(ignore)
+        if not line.startswith("!") and not words_intersect:
+            print(line.rstrip())
 
-    for line in file:
-        if line[0] != '!':
-            for i in ignore:
-                if i in line:
-                    break
-            else:
-                print(line, end='')

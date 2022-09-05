@@ -39,10 +39,11 @@ interface Ethernet0/3
 ...
 
 """
-FILENAME = "/home/user/Code/exercises/exercises/07_files/config_sw1.txt"
+from sys import argv
 
-with open(FILENAME) as file:
-    for line in file:
-        if line[0] == '!':
-            continue
-        print(line, end='')
+filename = argv[1]
+
+with open(filename) as f:
+    for line in f:
+        if not line.startswith("!"):
+            print(line.rstrip())

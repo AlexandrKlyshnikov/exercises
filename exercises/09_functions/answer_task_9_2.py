@@ -63,17 +63,13 @@ trunk_config_2 = {
 
 
 def generate_trunk_config(intf_vlan_mapping, trunk_template):
-    result = []
-    for intf, vlan in intf_vlan_mapping.items():
-        result.append("interface " + intf)
-        for line in trunk_template:
-            if "switchport trunk allowed vlan" in line:
-                var = " "
-                for i in vlan:
-                    var = var + str(i) + ','
-                result.append(line + var[:-1])
+    trunk_conf = []
+    for port, vlans in intf_vlan_mapping.items():
+        trunk_conf.append(f"interface {port}")
+        for command in trunk_template:
+            if command.endswith("allowed vlan"):
+                vlans_str = ",".join([str(vl) for vl in vlans])
+                trunk_conf.append(f"{command} {vlans_str}")
             else:
-                result.append(line)
-    return result
-
-print(generate_trunk_config(trunk_config, trunk_mode_template))
+                trunk_conf.append(command)
+    return trunk_conf

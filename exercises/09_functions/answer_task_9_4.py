@@ -45,9 +45,6 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
 
-from unittest import result
-
-
 ignore = ["duplex", "alias", "configuration"]
 
 
@@ -68,25 +65,17 @@ def ignore_command(command, ignore):
             ignore_status = True
     return ignore_status
 
+
 def convert_config_to_dict(config_filename):
-
-    result = dict()
-    current_command = ''
-    with open(config_filename) as file:
-        for line in file:
-            if line.strip():
-                if line.startswith("!"): 
-                    continue
-                if ignore_command(line, ignore): 
-                    continue
-                if not line.startswith(" "):
-                    current_command = line.strip()
-                    result[current_command] = []
+    config_dict = {}
+    with open(config_filename) as f:
+        for line in f:
+            line = line.rstrip()
+            if line and not (line.startswith("!") or ignore_command(line, ignore)):
+                if line[0].isalnum():
+                    section = line
+                    config_dict[section] = []
                 else:
-                    if current_command:
-                        result[current_command].append(line.strip())
+                    config_dict[section].append(line.strip())
+    return config_dict
 
-    return result
-
-            
-print(convert_config_to_dict("/home/user/Code/exercises/exercises/09_functions/config_sw1.txt"))

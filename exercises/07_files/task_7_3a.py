@@ -40,3 +40,11 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+result = []
+with open("/home/user/Code/exercises/exercises/07_files/CAM_table.txt", 'r') as file:
+    for line in file:
+        if "Gi" in line:
+            split = line.split()
+            result.append([int(split[0]), split[1], split[3]])
+for line in sorted(result):
+    print("{:<9}{:<20}{:<10}".format(line[0], line[1], line[2]))
