@@ -36,24 +36,18 @@
 """
 import ipaddress
 
-def convert_ranges_to_ip_list(input):
-    result = []
-    for item in input:
-        if "-" in item:
-            start_ip = ipaddress.IPv4Address(item.split('-')[0])
-            if len(item.split('-')[1]) >= 7:
-                end_ip = ipaddress.IPv4Address(item.split('-')[1])
-            else:
-                base = '.'.join(item.split('.')[0:3])
-                last_oct = item.split('-')[-1]
-                combined_ip = base+'.'+last_oct
-                end_ip = ipaddress.IPv4Address(combined_ip)
-            for ip_int in range(int(start_ip), int(end_ip+1)):
-                result.append(str(ipaddress.IPv4Address(ip_int)))
+
+def convert_ranges_to_ip_list(ip_addresses):
+    ip_list = []
+    for ip_address in ip_addresses:
+        if "-" in ip_address:
+            start_ip, stop_ip = ip_address.split("-")
+            if "." not in stop_ip:
+                stop_ip = ".".join(start_ip.split(".")[:-1] + [stop_ip])
+            start_ip = ipaddress.ip_address(start_ip)
+            stop_ip = ipaddress.ip_address(stop_ip)
+            for ip in range(int(start_ip), int(stop_ip) + 1):
+                ip_list.append(str(ipaddress.ip_address(ip)))
         else:
-            result.append(item)
-    return result
-
-input = ['8.8.4.4', '1.1.1.1-3', '172.21.41.128-172.21.41.132']
-
-print(convert_ranges_to_ip_list(input))
+            ip_list.append(ip_address)
+    return ip_list

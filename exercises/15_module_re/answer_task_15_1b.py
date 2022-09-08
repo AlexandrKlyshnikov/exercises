@@ -11,7 +11,7 @@ interface Ethernet0/1
  ip address 10.254.2.2 255.255.255.0 secondary
 
 А в словаре, который возвращает функция get_ip_from_cfg, интерфейсу Ethernet0/1
-соответствует только один из них.
+соответствует только один из них (второй).
 
 Скопировать функцию get_ip_from_cfg из задания 15.1a и переделать ее таким
 образом, чтобы в значении словаря она возвращала список кортежей
@@ -28,34 +28,42 @@ IP-адреса, диапазоны адресов и так далее, так 
 а не ввод пользователя.
 
 """
-
 import re
 
-def get_ip_from_cfg(filename: str):
 
-    with open(filename) as file:
-        regex = re.compile(
-            r"interface (?P<intf>\S+)\n"
-            r"( .*\n)*"
-            r" ip address (?P<ip>\S+) (?P<mask>\S+)"
-        )
-        match = regex.finditer(file.read())
-    
-    result = {m.group("intf"): [m.group("ip", "mask")] for m in match}
+def get_ip_from_cfg(filename):
+    result = {}
+    regex = (r"^interface (?P<intf>\S+)"
+             r"|address (?P<ip>\S+) (?P<mask>\S+)")
 
-    with open(filename) as file:
-        regex = re.compile(
-            r"interface (?P<intf>\S+)\n"
-            r"( .*\n)*"
-            r" ip address (?P<ip>\S+) (?P<mask>\S+)\n"
-            r" ip address (?P<ip2>\S+) (?P<mask2>\S+) secondary"
-        )
-        match = regex.finditer(file.read())
-    
-    result2 = {m.group("intf"): [m.group("ip", "mask"), m.group("ip2", "mask2")] for m in match}
-
-    result.update(result2)
-
+    with open(filename) as f:
+        for line in f:
+            match = re.search(regex, line)
+            if match:
+                if match.lastgroup == "intf":
+                    intf = match.group(match.lastgroup)
+                elif match.lastgroup == "mask":
+                    result.setdefault(intf, [])
+                    result[intf].append(match.group("ip", "mask"))
     return result
+
+
+# еще один вариант решения
+
+# def get_ip_from_cfg(filename):
+#     result = {}
+#     with open(filename) as f:
+#         # сначала отбираем нужные куски конфигурации
+#         match = re.finditer(
+#             "interface (\S+)\n"
+#             "(?: .*\n)*"
+#             " ip address \S+ \S+\n"
+#             "( ip address \S+ \S+ secondary\n)*",
+#             f.read(),
+#         )
+#         # потом в этих частях находим все IP-адреса
+#         for m in match:
+#             result[m.group(1)] = re.findall("ip address (\S+) (\S+)", m.group())
+#     return result
 
 print(get_ip_from_cfg("/home/user/Code/exercises/exercises/15_module_re/config_r2.txt"))

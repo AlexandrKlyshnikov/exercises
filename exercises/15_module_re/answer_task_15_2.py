@@ -23,24 +23,9 @@
 """
 import re
 
-def parse_sh_ip_int_br(filename):
 
-    regex = re.compile(
-        r"(?P<intf>\S+)\s+"
-        r"(?P<ip>\S+)\s+"
-        r"(?P<ok>\S+)\s+"
-        r"(?P<method>\S+)\s+"
-        r"(?P<status>up|down|administratively down)\s+"
-        r"(?P<protocol>up|down|administratively down)\s+"
-    )
-
-    with open(filename) as file:
-        result = []
-        for line in file:
-            match = regex.search(line)
-            if match:
-                result.append(match.group("intf", "ip", "status", "protocol"))
-    
+def parse_sh_ip_int_br(textfile):
+    regex = r"(\S+) +(\S+) +\w+ \w+ +(administratively down|up|down) +(up|down)"
+    with open(textfile) as f:
+        result = [m.groups() for m in re.finditer(regex, f.read())]
     return result
-
-print(parse_sh_ip_int_br("/home/user/Code/exercises/exercises/15_module_re/sh_ip_int_br.txt"))

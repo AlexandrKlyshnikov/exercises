@@ -25,18 +25,9 @@
 """
 import re
 
-def get_ip_from_cfg(filename: str):
 
-    ip_mask_regex = re.compile(r" ip address (?P<ip>\d+\.\d+.\d+.\d+).(?P<mask>\d+.\d+.\d+.\d+)")
-
-    result = []
-
-    with open(filename) as file:
-        for line in file:
-            match = ip_mask_regex.search(line)
-            if match:
-                result.append(match.group("ip", "mask"))
-    
+def get_ip_from_cfg(config):
+    regex = r"ip address (\S+) (\S+)"
+    with open(config) as f:
+        result = [m.groups() for m in re.finditer(regex, f.read())]
     return result
-
-print(get_ip_from_cfg("/home/user/Code/exercises/exercises/15_module_re/config_r1.txt"))
