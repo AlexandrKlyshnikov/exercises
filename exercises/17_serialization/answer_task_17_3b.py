@@ -43,29 +43,23 @@
 > pip install graphviz
 
 """
-
-from draw_network_graph import draw_topology
 import yaml
-from pprint import pprint
+from draw_network_graph import draw_topology
 
-def transform_topology(filename: str):
-    ""
-    with open(filename) as file:
-        data = yaml.safe_load(file)
 
-    raw_topology = {}
-    for l_dev in data.keys():
-        for l_intf in data[l_dev].keys():
-            for r_dev, r_intf in data[l_dev][l_intf].items():
-                raw_topology[(l_dev, l_intf)] = (r_dev, r_intf)
+def transform_topology(topology_filename):
+    with open(topology_filename) as f:
+        raw_topology = yaml.safe_load(f)
 
-    clean_topology = {}
-    for key, value in raw_topology.items():
-        if not key == clean_topology.get(value):
-            clean_topology[key] = value
-
-    return clean_topology
+    formatted_topology = {}
+    for l_device, peer in raw_topology.items():
+        for l_int, remote in peer.items():
+            r_device, r_int = list(remote.items())[0]
+            if not (r_device, r_int) in formatted_topology:
+                formatted_topology[(l_device, l_int)] = (r_device, r_int)
+    return formatted_topology
 
 
 if __name__ == "__main__":
-    draw_topology((transform_topology("/home/user/Code/exercises/exercises/17_serialization/YAML_OUTPUT.yaml")), "/home/user/Code/exercises/exercises/17_serialization/OUTPUT.svg")
+    formatted_topology = transform_topology("topology.yaml")
+    draw_topology(formatted_topology)

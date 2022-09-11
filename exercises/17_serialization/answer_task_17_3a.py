@@ -36,33 +36,22 @@
 в файл topology.yaml. Он понадобится в следующем задании.
 
 """
-
-import task_17_3 as t3
 import yaml
+import glob
+from task_17_3 import parse_sh_cdp_neighbors
 
-def generate_topology_from_cdp(list_of_files, save_to_filename = None) -> dict:
 
-    result = dict()
+def generate_topology_from_cdp(list_of_files, save_to_filename=None):
+    topology = {}
     for filename in list_of_files:
-        with open(filename) as file:
-            result.update(t3.parse_sh_cdp_neighbors(file.read()))
-    
+        with open(filename) as f:
+            topology.update(parse_sh_cdp_neighbors(f.read()))
     if save_to_filename:
-        with open(save_to_filename, 'w') as file_to_save:
-            yaml.dump(result, file_to_save, default_flow_style=False)
+        with open(save_to_filename, "w") as f_out:
+            yaml.dump(topology, f_out, default_flow_style=False)
+    return topology
 
-    return result
-
-
-list_of_files = [
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r1.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r2.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r3.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r4.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r5.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_r6.txt",
-    "/home/user/Code/exercises/exercises/17_serialization/sh_cdp_n_sw1.txt",
-]
 
 if __name__ == "__main__":
-    print(generate_topology_from_cdp(list_of_files, "/home/user/Code/exercises/exercises/17_serialization/YAML_OUTPUT.yaml"))
+    f_list = glob.glob("sh_cdp_n_*")
+    print(generate_topology_from_cdp(f_list, save_to_filename="topology.yaml"))

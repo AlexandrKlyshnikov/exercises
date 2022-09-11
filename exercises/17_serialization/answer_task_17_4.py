@@ -42,7 +42,6 @@ C-3PO,c3po@gmail.com,16/12/2019 17:24
 """
 import csv
 import datetime
-from pprint import pprint
 
 
 def convert_str_to_datetime(datetime_str):
@@ -59,29 +58,22 @@ def convert_datetime_to_str(datetime_obj):
     return datetime.datetime.strftime(datetime_obj, "%d/%m/%Y %H:%M")
 
 
-def write_last_log_to_csv(source_log: str, output: str) -> None:
-    ""
-    with open(source_log) as input_file:
-        csv_data = [next(csv.reader(input_file))]
-        raw_data = list(csv.reader(input_file))
-        data = {}
-        for line in raw_data:
-            name = line[0]
-            email = line[1]
-            time = line[2]
-            if data.get(email):
-                if convert_str_to_datetime(time) > convert_str_to_datetime(data[email][1]):
-                    data[email] = [name, time]
-            else:
-                data[email] = [name, time]
-
-    for email, name_time in data.items():
-        csv_data.append([name_time[0], email, name_time[1]])
-    
-    with open(output, "w") as output_file:
-        writer = csv.writer(output_file)
-        writer.writerows(csv_data)
+def write_last_log_to_csv(source_log, output):
+    with open(source_log) as f:
+        data = list(csv.reader(f))
+        header = data[0]
+    result = {}
+    sorted_by_date = sorted(
+        data[1:], key=lambda x: convert_str_to_datetime(x[2])
+    )
+    for name, email, date in sorted_by_date:
+        result[email] = (name, email, date)
+    with open(output, "w") as dest:
+        writer = csv.writer(dest)
+        writer.writerow(header)
+        for row in result.values():
+            writer.writerow(row)
 
 
-write_last_log_to_csv("/home/user/Code/exercises/exercises/17_serialization/mail_log.csv",
-                      "/home/user/Code/exercises/exercises/17_serialization/OUTPUT3.csv")
+if __name__ == "__main__":
+    write_last_log_to_csv("mail_log.csv", "example_result.csv")

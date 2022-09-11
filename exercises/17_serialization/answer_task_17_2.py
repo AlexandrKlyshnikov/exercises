@@ -43,42 +43,35 @@
 Кроме того, создан список заголовков (headers), который должен быть записан в CSV.
 """
 import re
-import glob
 import csv
-
-sh_version_files = glob.glob("sh_vers*")
-# print(sh_version_files)
-
-headers = ["hostname", "ios", "image", "uptime"]
-
-sh_version_files_abs = \
-["/home/user/Code/exercises/exercises/17_serialization/sh_version_r1.txt",
-"/home/user/Code/exercises/exercises/17_serialization/sh_version_r2.txt",
-"/home/user/Code/exercises/exercises/17_serialization/sh_version_r3.txt"]
+import glob
 
 
-def parse_sh_version(sh_version_output: str) -> tuple:
-    ""
-    regex = re.compile(r"IOS.+Version (?P<ios>\S+),[\S\s]+uptime is (?P<uptime>.+)[\S\s]+System image file is .(?P<image>\S+).\n")
-    match = regex.search(sh_version_output)
+def parse_sh_version(sh_ver_output):
+    regex = (
+        "Cisco IOS .*? Version (?P<ios>\S+), .*"
+        "uptime is (?P<uptime>[\w, ]+)\n.*"
+        'image file is "(?P<image>\S+)".*'
+    )
+    match = re.search(regex, sh_ver_output, re.DOTALL,)
     if match:
-        return match.group("ios"), match.group("image"), match.group("uptime")
+        return match.group("ios", "image", "uptime")
 
 
+def write_inventory_to_csv(data_filenames, csv_filename):
+    headers = ["hostname", "ios", "image", "uptime"]
+    with open(csv_filename, "w") as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
 
-def write_inventory_to_csv(data_filenames: list, csv_filename: str):
-    ""
-    result = [['hostname', 'ios', 'image', 'uptime']]
-    for filename in data_filenames:
-        hostname = filename.split('_')[-1].strip(".txt")
-        with open(filename) as file:
-            result.append([hostname] + list(parse_sh_version(file.read())))
-    
-    with open(csv_filename, 'w') as output:
-        writer = csv.writer(output)
-        for line in result:
-            writer.writerow(line)
+        for filename in data_filenames:
+            hostname = re.search("sh_version_(\S+).txt", filename).group(1)
+            with open(filename) as f:
+                parsed_data = parse_sh_version(f.read())
+                if parsed_data:
+                    writer.writerow([hostname] + list(parsed_data))
 
 
 if __name__ == "__main__":
-    write_inventory_to_csv(sh_version_files_abs, "/home/user/Code/exercises/exercises/17_serialization/OUTPUT2.csv")
+    sh_version_files = glob.glob("sh_vers*")
+    write_inventory_to_csv(sh_version_files, "routers_inventory.csv")
